@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: docker
+    ports:
+      - 5432:5432
+    volumes:
+      - ./migrations/0001_criar_tabela_clientes.sql:/docker-entrypoint-initdb.d/0001_criar_tabela_clientes.sql
+      - ./migrations/0002_adicionar_primary_key_id.sql:/docker-entrypoint-initdb.d/0002_adicionar_primary_key_id.sql
+      - ./migrations/0003_criar_index_email.sql:/docker-entrypoint-initdb.d/0003_criar_index_email.sql
+  server:
+    restart: always
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
